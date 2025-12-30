@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import GeneratorForm from './components/GeneratorForm';
 import SiteRenderer from './components/SiteRenderer';
 import LoadingIndicator from './components/LoadingIndicator';
@@ -7,6 +7,13 @@ import { generateSiteContent } from './services/geminiService';
 import { saveSiteInstance } from './services/storageService';
 import { GeneratorInputs, GeneratedSiteData, SiteInstance } from './types';
 import { ChevronLeft, CloudCheck, Loader2, Rocket } from 'lucide-react';
+
+declare global {
+  interface Window {
+    // Fixed: Using any to avoid type conflict with existing AIStudio definition and potential modifier mismatches.
+    aistudio: any;
+  }
+}
 
 const BannerText: React.FC<{
   text: string;
@@ -25,6 +32,15 @@ const App: React.FC = () => {
   const saveTimeoutRef = useRef<any>(null);
 
   const handleGenerate = async (newInputs: GeneratorInputs) => {
+    // Check for API key selection if the environment supports it
+    if (window.aistudio) {
+      const hasKey = await window.aistudio.hasSelectedApiKey();
+      if (!hasKey) {
+        await window.aistudio.openSelectKey();
+        // Proceeding after triggering openSelectKey per rules
+      }
+    }
+
     setIsLoading(true);
     try {
       const data = await generateSiteContent(newInputs);
@@ -34,11 +50,17 @@ const App: React.FC = () => {
         lastSaved: Date.now()
       };
       setActiveSite(instance);
-      // Use IndexedDB instead of localStorage to avoid quota issues
       await saveSiteInstance(instance);
-    } catch (error) {
-      console.error("Failed to generate site:", error);
-      alert("Something went wrong during generation. Please try again.");
+    } catch (error: any) {
+      console.error("Generation failed:", error);
+      
+      // Handle the specific "Requested entity not found" by prompting for key again if available
+      if (error.message?.includes("Requested entity was not found") && window.aistudio) {
+        alert("The selected model is not available with this API key. Please select a different key.");
+        await window.aistudio.openSelectKey();
+      } else {
+        alert(`Generation Error: ${error.message || "Please check your API key in the Vercel dashboard and try again."}`);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +109,7 @@ const App: React.FC = () => {
 
       {activeSite && (
         <div className="flex flex-col min-h-screen">
-          {/* Sticky Editor Instruction Banner - Red (25% Larger py-2.5 -> py-4) */}
+          {/* Sticky Editor Instruction Banner - Red */}
           <div className="sticky top-0 z-[110] bg-red-600 text-white px-4 py-4 md:py-5 shadow-lg flex items-center justify-between overflow-hidden">
             <div className="flex items-center gap-2 overflow-hidden flex-1">
               <button 
@@ -119,7 +141,6 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          {/* Unified Inline Site Editor */}
           <main className="bg-white pb-24">
             <SiteRenderer 
               data={activeSite.data} 
@@ -128,7 +149,6 @@ const App: React.FC = () => {
             />
           </main>
 
-          {/* Sticky Deploy Button at Bottom */}
           <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-gray-100 p-3 md:p-4 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-3">
               <div className="text-center md:text-left">
