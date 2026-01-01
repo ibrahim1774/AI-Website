@@ -75,12 +75,19 @@ const App: React.FC = () => {
           }
 
           setDeploymentStatus('success');
-          setDeploymentUrl(result.url);
+
+          // Safety check: Ensure we use the clean domain URL even if the API returns a deployment URL
+          let finalUrl = result.url;
+          if (finalUrl.includes('-') && finalUrl.includes('.vercel.app') && !finalUrl.includes(projectName + '.vercel.app')) {
+            finalUrl = `https://${projectName}.vercel.app`;
+          }
+
+          setDeploymentUrl(finalUrl);
           setDeploymentMessage('Success! Your site is live.');
 
           // Auto-open
           setTimeout(() => {
-            window.open(result.url, '_blank');
+            window.open(finalUrl, '_blank');
           }, 1000);
 
         } catch (error: any) {

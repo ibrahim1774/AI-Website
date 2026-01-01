@@ -59,23 +59,19 @@ export class VercelDeployer {
 
             const deploymentUrl = response.data.url;
             const aliases = response.data.alias || [];
-            const nameFromVercel = response.data.name;
+            const vercelProjectName = response.data.name || projectName;
 
-            // Prioritize aliases, then try to construct the project domain, then fallback to deployment URL
-            let finalUrl = deploymentUrl;
+            // Aggressively prioritize the clean domain
+            let finalUrl = `${vercelProjectName}.vercel.app`;
 
             if (aliases.length > 0) {
                 finalUrl = aliases[0];
-            } else {
-                // Fallback to project-name.vercel.app
-                const effectiveProjectName = nameFromVercel || projectName;
-                if (effectiveProjectName) {
-                    finalUrl = `${effectiveProjectName}.vercel.app`;
-                }
+            } else if (!vercelProjectName && deploymentUrl) {
+                finalUrl = deploymentUrl;
             }
 
-            console.log(`[Deploy] Success! Deployment URL: https://${deploymentUrl}`);
-            console.log(`[Deploy] Returning clean URL: https://${finalUrl}`);
+            console.log(`[Deploy] Vercel URL: ${deploymentUrl}`);
+            console.log(`[Deploy] Clean URL: ${finalUrl}`);
 
             return `https://${finalUrl}`;
         } catch (error: any) {
