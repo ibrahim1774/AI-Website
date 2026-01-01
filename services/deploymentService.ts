@@ -4,12 +4,12 @@ import SiteRenderer from '../components/SiteRenderer';
 import React from 'react';
 
 export const deploySite = async (data: GeneratedSiteData, projectName: string) => {
-    try {
-        // 1. Render the site to HTML string
-        // We wrap it in a basic HTML shell since SiteRenderer might just be the body content
-        const bodyHtml = renderToStaticMarkup(React.createElement(SiteRenderer, { data, isEditMode: false }));
+  try {
+    // 1. Render the site to HTML string
+    // We wrap it in a basic HTML shell since SiteRenderer might just be the body content
+    const bodyHtml = renderToStaticMarkup(React.createElement(SiteRenderer, { data, isEditMode: false }));
 
-        const fullHtml = `<!DOCTYPE html>
+    const fullHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -77,46 +77,41 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
 </body>
 </html>`;
 
-        // 2. Prepare files payload
-        // Note: In a real scenario, you might want to extract images from 'data' and send them as separate files 
-        // if they are base64, but the API handles base64 in HTML too (rewriter might need to be smart).
-        // Actually, the API expects 'files' map.
-        // If images are Base64 in the HTML, the API's rewriter needs to handle them?
-        // Our current rewriter handles 'src="file.png"'. It doesn't extract Base64 from src.
-        // BUT, the 'data' object has base64 strings (from Gemini).
-        // So we should extract them into the 'files' map to keep HTML clean.
+    // 2. Prepare files payload
+    const files: Record<string, string> = {};
 
-        const files: Record<string, string> = {
-            'index.html': fullHtml
-        };
+    // Helper to upload a single image and return its URL
+    const uploadAsset = async (base64: string): Promise<string> => {
+      const res = await fetch('/api/upload-asset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64, projectName })
+      });
+      if (!res.ok) throw new Error('Failed to upload asset');
+      const result = await res.json();
+      return result.url;
+    };
 
-        // Helper to extract base64 images and replace in HTML
-        // For now, we'll send the HTML with Base64 and let the backend handle it?
-        // The backend API writes files to disk. If HTML has base64, it's fine, but large.
-        // The 'AssetUploader' uploads files from disk. It doesn't parse HTML to find Base64.
-        // So we SHOULD extract them here if we want them hosted on GCS.
+    // Clone data to modify it for rendering (replace base64 with paths)
+    const deployData = JSON.parse(JSON.stringify(data));
 
-        // Let's do a simple pass to extract images from the data object
-        // This is specific to the data structure
-        let imageCounter = 0;
-        const processImage = (imgData: string | undefined) => {
-            if (!imgData || !imgData.startsWith('data:')) return imgData;
-            const filename = `assets/image-${Date.now()}-${imageCounter++}.png`;
-            files[filename] = imgData; // Add to files payload
-            return filename; // Return relative path for HTML
-        };
+    // Sequential Upload of images to avoid payload limits
+    if (deployData.hero?.heroImage?.startsWith('data:')) {
+      deployData.hero.heroImage = await uploadAsset(deployData.hero.heroImage);
+    }
+    if (deployData.aboutUs?.image?.startsWith('data:')) {
+      deployData.aboutUs.image = await uploadAsset(deployData.aboutUs.image);
+    }
+    if (deployData.repairBenefits?.image?.startsWith('data:')) {
+      deployData.repairBenefits.image = await uploadAsset(deployData.repairBenefits.image);
+    }
+    if (deployData.industryValue?.valueImage?.startsWith('data:')) {
+      deployData.industryValue.valueImage = await uploadAsset(deployData.industryValue.valueImage);
+    }
 
-        // Clone data to modify it for rendering (replace base64 with paths)
-        const deployData = JSON.parse(JSON.stringify(data));
-
-        if (deployData.hero?.heroImage) deployData.hero.heroImage = processImage(deployData.hero.heroImage);
-        if (deployData.aboutUs?.image) deployData.aboutUs.image = processImage(deployData.aboutUs.image);
-        if (deployData.repairBenefits?.image) deployData.repairBenefits.image = processImage(deployData.repairBenefits.image);
-        if (deployData.industryValue?.valueImage) deployData.industryValue.valueImage = processImage(deployData.industryValue.valueImage);
-
-        // Re-render with paths
-        const cleanBodyHtml = renderToStaticMarkup(React.createElement(SiteRenderer, { data: deployData, isEditMode: false }));
-        files['index.html'] = `<!DOCTYPE html>
+    // 3. Render with paths (now URLs)
+    const cleanBodyHtml = renderToStaticMarkup(React.createElement(SiteRenderer, { data: deployData, isEditMode: false }));
+    files['index.html'] = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -184,24 +179,24 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
 </body>
 </html>`;
 
-        // 3. Send to API
-        const response = await fetch('/api/deploy', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                projectName,
-                files
-            })
-        });
+    // 4. Send final deployment request (now very small)
+    const response = await fetch('/api/deploy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        projectName,
+        files
+      })
+    });
 
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.error || 'Deployment failed');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Deploy Service Error:', error);
-        throw error;
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || 'Deployment failed');
     }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Deploy Service Error:', error);
+    throw error;
+  }
 };
