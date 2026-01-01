@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import deployHandler from './api/deploy.js';
+import uploadAssetHandler from './api/upload-asset.js';
 import { AssetUploader } from './lib/storage.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,28 +36,9 @@ app.post('/api/deploy', async (req, res) => {
 
 // New Sequential Upload Endpoint
 app.post('/api/upload-asset', async (req, res) => {
-    const { base64, projectName } = req.body;
-    if (!base64 || !projectName) {
-        return res.status(400).json({ error: 'Missing base64 or projectName' });
-    }
-
+    console.log(`[SERVER] Received upload request. Body size: ${JSON.stringify(req.body).length} bytes`);
     try {
-        const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME;
-        if (!GCS_BUCKET_NAME) throw new Error('Missing GCS_BUCKET_NAME');
-
-        const uploader = new AssetUploader(GCS_BUCKET_NAME);
-
-        // Extract base64 data
-        const base64Data = base64.split(',')[1];
-        const buffer = Buffer.from(base64Data, 'base64');
-
-        // Generate a unique filename
-        const filename = `assets/image-${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
-
-        // Upload directly to GCS
-        const publicUrl = await uploader.uploadBuffer(buffer, filename, projectName);
-
-        res.json({ success: true, url: publicUrl, filename });
+        await uploadAssetHandler(req as any, res as any);
     } catch (error: any) {
         console.error('Upload Error:', error);
         res.status(500).json({ error: error.message });
