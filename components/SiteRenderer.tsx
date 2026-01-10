@@ -149,7 +149,7 @@ const SiteRenderer: React.FC<SiteRendererProps> = ({ data, isEditMode, onUpdate 
                 onBlur={(val) => updateField('hero.badge', val)}
               />
             </div>
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.85] flex flex-col items-center">
+            <h1 className="text-white text-5xl md:text-8xl font-black tracking-tighter leading-[0.85] flex flex-col items-center">
               <EditableText
                 text={data.hero.headline.line1}
                 isEditMode={isEditMode}

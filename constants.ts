@@ -32,6 +32,10 @@ HERO HEADLINE (STRICT):
 - Tone: Professional and branding-focused, NOT keyword-heavy or stacked lists.
 - Do NOT use generic "stacked" text blocks.
 
+MANDATORY SECTIONS (DO NOT SKIP):
+- ALL sections listed below MUST be generated every single time.
+- Failure to include any section (especially "Who We Help") is unacceptable.
+
 SECTIONS TO GENERATE:
 1. Hero: Headline (exactly 2 lines), subtext, badge, stats, and ctaText (MUST include {phone}).
 2. Services: Exactly 4 distinct service cards with icons. 
