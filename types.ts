@@ -23,7 +23,6 @@ export interface GeneratedSiteData {
     headline: {
       line1: string;
       line2: string;
-      line3: string;
     };
     subtext: string;
     ctaText: string;

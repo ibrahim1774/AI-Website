@@ -148,7 +148,7 @@ const SiteRenderer: React.FC<SiteRendererProps> = ({ data, isEditMode, onUpdate 
                 onBlur={(val) => updateField('hero.badge', val)}
               />
             </div>
-            <h1 className="text-white text-5xl md:text-[84px] font-black tracking-tight leading-[0.9] mb-10">
+            <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.85] flex flex-col items-center">
               <EditableText
                 text={data.hero.headline.line1}
                 isEditMode={isEditMode}
@@ -159,14 +159,8 @@ const SiteRenderer: React.FC<SiteRendererProps> = ({ data, isEditMode, onUpdate 
                 text={data.hero.headline.line2}
                 isEditMode={isEditMode}
                 onBlur={(val) => updateField('hero.headline.line2', val)}
-                className="block"
+                className="block text-blue-600"
                 style={{ color: primaryColor }}
-              />
-              <EditableText
-                text={data.hero.headline.line3}
-                isEditMode={isEditMode}
-                onBlur={(val) => updateField('hero.headline.line3', val)}
-                className="block opacity-90"
               />
             </h1>
             <EditableText

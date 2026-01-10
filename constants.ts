@@ -26,8 +26,14 @@ LOCATION PERSONALIZATION:
 - Include "{location}" in the titles of exactly 2-3 sections naturally (e.g., "Serving {location}", "Why {location} Residents Trust Us").
 - Tone should be fluid and natural, not keyword-stuffed.
 
+HERO HEADLINE (STRICT):
+- MUST include both "{companyName}" and "{location}".
+- Style: Short, concise, maximum 2 lines. 
+- Tone: Professional and branding-focused, NOT keyword-heavy or stacked lists.
+- Do NOT use generic "stacked" text blocks.
+
 SECTIONS TO GENERATE:
-1. Hero: Headline (3 lines), subtext, badge, stats, and ctaText (MUST include {phone}).
+1. Hero: Headline (exactly 2 lines), subtext, badge, stats, and ctaText (MUST include {phone}).
 2. Services: Exactly 4 distinct service cards with icons. 
 3. Value Proposition: Section headline (personalize with {location}), subtitle, descriptive content, highlights, and ctaText (MUST include {phone}).
 4. Process: Exactly 3 logical steps from start to finish.
@@ -55,10 +61,9 @@ export const RESPONSE_SCHEMA = {
           type: Type.OBJECT,
           properties: {
             line1: { type: Type.STRING },
-            line2: { type: Type.STRING },
-            line3: { type: Type.STRING }
+            line2: { type: Type.STRING }
           },
-          required: ["line1", "line2", "line3"]
+          required: ["line1", "line2"]
         },
         subtext: { type: Type.STRING },
         ctaText: { type: Type.STRING },
