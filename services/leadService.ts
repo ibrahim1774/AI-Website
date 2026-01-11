@@ -5,7 +5,7 @@ import { GeneratorInputs } from "../types";
  * This can be sent to a Webhook (Zapier/Make) or a Database.
  */
 export const captureLead = async (inputs: GeneratorInputs) => {
-    const WEBHOOK_URL = import.meta.env.VITE_LEAD_WEBHOOK_URL;
+    const WEBHOOK_URL = (import.meta as any).env.VITE_LEAD_WEBHOOK_URL;
 
     if (!WEBHOOK_URL) {
         console.warn("Lead capture skipped: VITE_LEAD_WEBHOOK_URL not set.");

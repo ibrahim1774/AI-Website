@@ -45,8 +45,8 @@ const App: React.FC = () => {
         // Fire Facebook Pixel Purchase Event
         if (window.fbq) {
           window.fbq('track', 'Purchase', {
-            value: parseFloat(import.meta.env.VITE_PURCHASE_VALUE || '10.00'),
-            currency: import.meta.env.VITE_PURCHASE_CURRENCY || 'USD'
+            value: parseFloat((import.meta as any).env.VITE_PURCHASE_VALUE || '10.00'),
+            currency: (import.meta as any).env.VITE_PURCHASE_CURRENCY || 'USD'
           });
         }
 
@@ -177,7 +177,7 @@ const App: React.FC = () => {
     setDeploymentMessage('Redirecting to secure payment...');
 
     setTimeout(() => {
-      window.location.href = import.meta.env.VITE_STRIPE_PAYMENT_LINK || "https://buy.stripe.com/8x2bJ0eCo8yGgrE8Ym3cc05";
+      window.location.href = (import.meta as any).env.VITE_STRIPE_PAYMENT_LINK || "https://buy.stripe.com/8x2bJ0eCo8yGgrE8Ym3cc05";
     }, 1000);
   };
 
