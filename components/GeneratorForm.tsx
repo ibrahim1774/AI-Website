@@ -6,9 +6,10 @@ import { ArrowRight, Zap } from 'lucide-react';
 interface GeneratorFormProps {
   onSubmit: (inputs: GeneratorInputs) => void;
   isLoading: boolean;
+  onSignIn?: () => void;
 }
 
-const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading }) => {
+const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading, onSignIn }) => {
   const [inputs, setInputs] = useState<GeneratorInputs>({
     industry: '',
     companyName: '',
@@ -28,14 +29,24 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading }) =>
 
   return (
     <div className="max-w-4xl mx-auto px-6 font-light" style={{ fontFamily: '"Avenir Light", Avenir, sans-serif' }}>
-      {/* Top Left Logo Header */}
-      <div className="flex justify-start items-center gap-2 mb-6 md:mb-8">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-          <Zap className="text-white w-5 h-5 fill-white" />
+      {/* Top Header: Logo + Sign In */}
+      <div className="flex justify-between items-center mb-6 md:mb-8">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Zap className="text-white w-5 h-5 fill-white" />
+          </div>
+          <div className="text-sm font-bold tracking-[0.2em] text-white uppercase">
+            PrimeHub <span className="text-blue-500">AI</span>
+          </div>
         </div>
-        <div className="text-sm font-bold tracking-[0.2em] text-white uppercase">
-          PrimeHub <span className="text-blue-500">AI</span>
-        </div>
+        {onSignIn && (
+          <button
+            onClick={onSignIn}
+            className="text-white/70 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors"
+          >
+            Sign In
+          </button>
+        )}
       </div>
 
       {/* Headline Group - Reverted to 'under a minute' */}

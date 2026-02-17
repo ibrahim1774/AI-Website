@@ -466,7 +466,11 @@ const App: React.FC = () => {
       {/* ─── Generator View ─── */}
       {currentView === 'generator' && !isGenerating && (
         <div className="pt-4 md:pt-6 pb-20 px-6">
-          <GeneratorForm onSubmit={handleGenerate} isLoading={isGenerating} />
+          <GeneratorForm
+            onSubmit={handleGenerate}
+            isLoading={isGenerating}
+            onSignIn={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
+          />
         </div>
       )}
 
