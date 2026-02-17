@@ -4,7 +4,13 @@ import { GeneratorInputs } from '../types.js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://jzwohodbfcwtoltsstfs.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_F4kb9oHazzs2zyk5kLL0FA_zxckXSIB';
 
-export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: false,
+  }
+});
 
 /**
  * Persists lead data to Supabase silently.

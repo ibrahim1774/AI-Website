@@ -61,6 +61,11 @@ export interface GeneratedSiteData {
     image: string;
     bullets: string[];
   };
+  gallery?: {
+    title: string;
+    subtitle: string;
+    images: (string | null)[];
+  };
   faqs: FAQItem[];
   footer: {
     headline: string;
@@ -77,6 +82,12 @@ export interface SiteInstance {
   id: string;
   data: GeneratedSiteData;
   lastSaved: number;
+  user_id?: string;
+  formInputs?: GeneratorInputs;
+  deployedUrl?: string;
+  deploymentStatus?: 'draft' | 'deployed';
+  customDomain?: string;
+  domainOrderId?: string;
 }
 
 export interface GeneratorInputs {
@@ -86,3 +97,16 @@ export interface GeneratorInputs {
   phone: string;
   brandColor: string;
 }
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  stripe_customer_id: string | null;
+  subscription_status: 'none' | 'active' | 'past_due' | 'cancelled';
+  created_at: string;
+  updated_at: string;
+}
+
+export type AppView = 'generator' | 'editor' | 'dashboard';

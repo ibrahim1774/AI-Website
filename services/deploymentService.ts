@@ -111,6 +111,16 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
       deployData.whoWeHelp.image = await uploadAsset(deployData.whoWeHelp.image);
     }
 
+    // Upload gallery images sequentially
+    if (deployData.gallery?.images) {
+      for (let i = 0; i < deployData.gallery.images.length; i++) {
+        const img = deployData.gallery.images[i];
+        if (img && img.startsWith('data:')) {
+          deployData.gallery.images[i] = await uploadAsset(img);
+        }
+      }
+    }
+
     // 3. Render with paths (now URLs)
     const cleanBodyHtml = renderToStaticMarkup(React.createElement(SiteRenderer, { data: deployData, isEditMode: false }));
     files['index.html'] = `<!DOCTYPE html>

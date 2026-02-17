@@ -1,8 +1,9 @@
 
-import React, { useRef } from 'react';
-import { GeneratedSiteData } from '../types';
-import IconRenderer from './IconRenderer';
-import { CheckCircle, Camera, Sparkles, UserCheck, HelpCircle, ArrowRight, Shield, Clock, Award, Star } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { GeneratedSiteData } from '../types.js';
+import IconRenderer from './IconRenderer.js';
+import { compressImage } from '../services/imageService.js';
+import { CheckCircle, Camera, Sparkles, UserCheck, HelpCircle, ArrowRight, Shield, Clock, Award, Star, Loader2, X } from 'lucide-react';
 
 interface SiteRendererProps {
   data: GeneratedSiteData;
@@ -51,30 +52,151 @@ const EditableImage: React.FC<{
   onUpload: (base64: string) => void;
 }> = ({ src, alt, className, isEditMode, onUpload }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const compressed = await compressImage(file);
+      onUpload(compressed);
+    } catch (err) {
+      // Fallback to raw base64
       const reader = new FileReader();
-      reader.onloadend = () => {
-        onUpload(reader.result as string);
-      };
+      reader.onloadend = () => onUpload(reader.result as string);
       reader.readAsDataURL(file);
+    } finally {
+      setIsUploading(false);
     }
   };
 
   return (
-    <div className={`relative group overflow-hidden ${className}`} onClick={() => isEditMode && fileInputRef.current?.click()}>
+    <div className={`relative group overflow-hidden ${className}`} onClick={() => isEditMode && !isUploading && fileInputRef.current?.click()}>
       <img src={src} alt={alt} className="w-full h-full object-cover" />
-      {isEditMode && (
+      {isUploading && (
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30">
+          <div className="text-white font-bold flex items-center gap-2 text-sm">
+            <Loader2 className="animate-spin" size={20} /> Uploading...
+          </div>
+        </div>
+      )}
+      {isEditMode && !isUploading && (
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 z-20">
           <div className="bg-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
             <Camera className="text-blue-600 w-5 h-5" />
             <span className="text-blue-900 font-bold text-xs uppercase tracking-tight">Replace Image</span>
           </div>
-          <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
         </div>
       )}
+      <input type="file" ref={fileInputRef} className="hidden" accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} />
+    </div>
+  );
+};
+
+// Gallery sub-components
+const GalleryImageSlot: React.FC<{
+  src: string;
+  isEditMode: boolean;
+  onReplace: (base64: string) => void;
+  onDelete: () => void;
+}> = ({ src, isEditMode, onReplace, onDelete }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const compressed = await compressImage(file);
+      onReplace(compressed);
+    } catch (err) {
+      const reader = new FileReader();
+      reader.onloadend = () => onReplace(reader.result as string);
+      reader.readAsDataURL(file);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="relative group w-full h-full">
+      <img src={src} alt="Gallery" className="w-full h-full object-cover rounded-3xl" />
+      {isUploading && (
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 rounded-3xl">
+          <div className="text-white font-bold flex items-center gap-2 text-sm">
+            <Loader2 className="animate-spin" size={20} /> Uploading...
+          </div>
+        </div>
+      )}
+      {isEditMode && !isUploading && (
+        <>
+          {/* Replace overlay */}
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-3xl z-20 cursor-pointer"
+          >
+            <div className="bg-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2">
+              <Camera className="text-blue-600 w-5 h-5" />
+              <span className="text-blue-900 font-bold text-xs uppercase tracking-tight">Replace Image</span>
+            </div>
+          </div>
+          {/* Delete button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="absolute top-3 right-3 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity z-30 hover:bg-red-600"
+          >
+            <X size={16} />
+          </button>
+        </>
+      )}
+      <input type="file" ref={fileInputRef} className="hidden" accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} />
+    </div>
+  );
+};
+
+const EmptyGallerySlot: React.FC<{
+  onAdd: (base64: string) => void;
+}> = ({ onAdd }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const compressed = await compressImage(file);
+      onAdd(compressed);
+    } catch (err) {
+      const reader = new FileReader();
+      reader.onloadend = () => onAdd(reader.result as string);
+      reader.readAsDataURL(file);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div
+      onClick={() => fileInputRef.current?.click()}
+      className="w-full h-full border-2 border-dashed border-slate-300 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all"
+    >
+      {isUploading ? (
+        <div className="flex items-center gap-2 text-blue-500 font-bold text-sm">
+          <Loader2 className="animate-spin" size={20} /> Uploading...
+        </div>
+      ) : (
+        <>
+          <Camera size={32} className="text-slate-300 mb-3" />
+          <span className="text-slate-400 font-bold text-sm">Add your image</span>
+        </>
+      )}
+      <input type="file" ref={fileInputRef} className="hidden" accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} />
     </div>
   );
 };
@@ -472,6 +594,65 @@ const SiteRenderer: React.FC<SiteRendererProps> = ({ data, isEditMode, onUpdate 
           </div>
         </div>
       </section>
+
+      {/* Gallery Section */}
+      {data.gallery && (
+        <section className="py-12 md:py-20 px-6 md:px-12 bg-slate-50">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="text-blue-600 font-black text-xs uppercase tracking-[0.2em] mb-4">Our Work</div>
+              <EditableText
+                text={data.gallery.title || 'Gallery'}
+                isEditMode={isEditMode}
+                onBlur={(val) => updateField('gallery.title', val)}
+                className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 mb-4"
+                as="h2"
+              />
+              <EditableText
+                text={data.gallery.subtitle || 'See our latest projects'}
+                isEditMode={isEditMode}
+                onBlur={(val) => updateField('gallery.subtitle', val)}
+                className="text-slate-500 text-lg font-medium"
+              />
+              <div className="w-24 h-1.5 bg-blue-600 mx-auto rounded-full mt-6"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[0, 1, 2].map((idx) => {
+                const imgSrc = data.gallery?.images?.[idx];
+                return (
+                  <div key={idx} className="aspect-[4/3] rounded-3xl overflow-hidden">
+                    {imgSrc ? (
+                      <GalleryImageSlot
+                        src={imgSrc}
+                        isEditMode={isEditMode}
+                        onReplace={(base64) => {
+                          const images = [...(data.gallery?.images || [null, null, null])];
+                          images[idx] = base64;
+                          updateField('gallery.images', images);
+                        }}
+                        onDelete={() => {
+                          const images = [...(data.gallery?.images || [null, null, null])];
+                          images[idx] = null;
+                          updateField('gallery.images', images);
+                        }}
+                      />
+                    ) : isEditMode ? (
+                      <EmptyGallerySlot
+                        onAdd={(base64) => {
+                          const images = [...(data.gallery?.images || [null, null, null])];
+                          images[idx] = base64;
+                          updateField('gallery.images', images);
+                        }}
+                      />
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* FAQ Section */}
       <section className="py-12 md:py-20 px-6 md:px-12 bg-slate-50">
