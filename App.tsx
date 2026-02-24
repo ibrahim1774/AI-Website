@@ -561,29 +561,26 @@ const App: React.FC = () => {
 
           {/* Pre-payment bottom bar */}
           {!isPostPayment && (
-            <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-gray-100 p-4 md:p-5 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
-              <div className="max-w-3xl mx-auto space-y-4">
+            <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-gray-100 p-3 md:p-4 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
+              <div className="max-w-3xl mx-auto space-y-2">
                 {/* HOW IT WORKS + steps */}
-                <div className="text-center">
-                  <p className="text-black font-bold text-sm uppercase tracking-[0.2em] mb-2">How It Works</p>
-                  <div className="flex flex-col md:flex-row md:justify-center md:gap-6 gap-1">
-                    <span className="text-black font-bold text-sm">1. Edit your text & images above</span>
-                    <span className="text-black font-bold text-sm">2. Click deploy when ready</span>
-                    <span className="text-black font-bold text-sm">3. Your site goes live instantly</span>
-                  </div>
+                <div className="flex flex-wrap justify-center items-center gap-x-5 gap-y-0.5">
+                  <span className="text-black font-bold text-xs">1. Edit your text and images as needed.</span>
+                  <span className="text-black font-bold text-xs">2. Click Deploy to publish your site.</span>
+                  <span className="text-black font-bold text-xs">3. Your site goes live instantly.</span>
                 </div>
 
                 {/* Pricing + deploy button */}
-                <div className="flex flex-col md:flex-row items-center justify-center gap-3">
-                  <p className="text-black font-bold text-sm uppercase tracking-tight text-center">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-2">
+                  <p className="text-black font-bold text-xs uppercase tracking-tight text-center">
                     PAY ONLY $10/MONTH WEBSITE HOSTING TO HAVE YOUR CUSTOM SITE LIVE & ACTIVE
                   </p>
                   <button
                     onClick={handleDeploy}
                     disabled={deploymentStatus === 'deploying'}
-                    className="w-full md:w-auto bg-blue-600 text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 hover:bg-blue-700 active:scale-[0.95] transition-all uppercase tracking-wider disabled:opacity-50"
+                    className="w-full md:w-auto bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 hover:bg-blue-700 active:scale-[0.95] transition-all uppercase tracking-wider disabled:opacity-50"
                   >
-                    {deploymentStatus === 'deploying' ? <Loader2 className="animate-spin" size={18} /> : <Rocket size={18} />}
+                    {deploymentStatus === 'deploying' ? <Loader2 className="animate-spin" size={16} /> : <Rocket size={16} />}
                     Deploy Website
                   </button>
                 </div>

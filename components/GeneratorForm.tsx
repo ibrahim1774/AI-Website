@@ -15,7 +15,10 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading, onSi
     companyName: '',
     location: '',
     phone: '',
-    brandColor: '#2563eb'
+    brandColor: '#2563eb',
+    services: '',
+    tagline: '',
+    yearsInBusiness: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -121,6 +124,53 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading, onSi
                 onChange={(e) => setInputs({ ...inputs, phone: e.target.value })}
                 className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
               />
+            </div>
+          </div>
+
+          {/* Additional Details */}
+          <div className="space-y-6 md:space-y-8">
+            {/* Services Offered - Full Width */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
+                Services Offered <span className="text-gray-600 normal-case tracking-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Drain cleaning, water heater repair, pipe installation..."
+                value={inputs.services}
+                onChange={(e) => setInputs({ ...inputs, services: e.target.value })}
+                className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 md:gap-y-8">
+              {/* Tagline */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
+                  Tagline <span className="text-gray-600 normal-case tracking-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Quality You Can Trust"
+                  value={inputs.tagline}
+                  onChange={(e) => setInputs({ ...inputs, tagline: e.target.value })}
+                  className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
+                />
+              </div>
+
+              {/* Years in Business */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
+                  Years in Business <span className="text-gray-600 normal-case tracking-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 35"
+                  value={inputs.yearsInBusiness}
+                  onChange={(e) => setInputs({ ...inputs, yearsInBusiness: e.target.value })}
+                  className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
+                />
+              </div>
             </div>
           </div>
 

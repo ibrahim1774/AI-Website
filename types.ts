@@ -84,6 +84,9 @@ export interface GeneratorInputs {
   location: string;
   phone: string;
   brandColor: string;
+  services?: string;
+  tagline?: string;
+  yearsInBusiness?: string;
 }
 
 export interface UserProfile {
