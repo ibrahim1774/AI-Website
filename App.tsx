@@ -473,7 +473,7 @@ const App: React.FC = () => {
 
       {/* ─── Generator View ─── */}
       {currentView === 'generator' && !isGenerating && (
-        <div className="pt-4 md:pt-6 pb-20 px-6">
+        <div className="pt-4 md:pt-6 pb-10 px-6">
           <GeneratorForm
             onSubmit={handleGenerate}
             isLoading={isGenerating}

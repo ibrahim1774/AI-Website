@@ -28,15 +28,14 @@ LOCATION PERSONALIZATION:
 
 USER-PROVIDED CONTENT (USE IF PROVIDED — leave out if empty):
 - If "{services}" is not empty, use these specific services throughout the site content (service cards, descriptions, hero subheadline). Prioritize these over generic service descriptions.
-- If "{tagline}" is not empty, incorporate it naturally into the hero subheadline or as a supporting line near the headline.
+
 - If "{yearsInBusiness}" is not empty, prominently feature "Over {yearsInBusiness} Years of Experience" in the trust section headline (e.g., "Over {yearsInBusiness} Years of Trusted [Service] in {location}"). This is the ONE exception to the no-numbers rule.
 
 SECTIONS TO GENERATE (ALL MANDATORY):
 
 1. HERO SECTION:
    - headline: Single line. Formula: "Professional [Service] in {location}". MUST include "{location}".
-   - subheadline: Body paragraph. Formula: "{companyName} provides [adjectives], and affordable [service]. We specialize in [specific services]. Throughout {location}, we focus on quality, precision, and satisfaction at every job." If "{tagline}" is provided, weave it naturally into this paragraph or place it as the opening line.
-   - ctaText: CTA button text. MUST include "{phone}".
+   - subheadline: Body paragraph. Formula: "{companyName} provides [adjectives], and affordable [service]. We specialize in [specific services]. Throughout {location}, we focus on quality, precision, and satisfaction at every job."   - ctaText: CTA button text. MUST include "{phone}".
 
 2. TRUST/CREDIBILITY SECTION:
    - headline: If "{yearsInBusiness}" is provided, use formula: "Over {yearsInBusiness} Years of Trusted [Service] in {location}". Otherwise use: "Trusted [Service] Experts Serving {location}".
@@ -79,7 +78,7 @@ Company: {companyName}
 Location: {location}
 Phone: {phone}
 Services: {services}
-Tagline: {tagline}
+
 Years in Business: {yearsInBusiness}
 `;
 

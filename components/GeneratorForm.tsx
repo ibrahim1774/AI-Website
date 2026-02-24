@@ -17,7 +17,7 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading, onSi
     phone: '',
     brandColor: '#2563eb',
     services: '',
-    tagline: '',
+
     yearsInBusiness: ''
   });
 
@@ -53,7 +53,7 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading, onSi
       </div>
 
       {/* Headline Group - Reverted to 'under a minute' */}
-      <div className="mb-6 md:mb-10 text-center space-y-3">
+      <div className="mb-4 md:mb-6 text-center space-y-3">
         <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-white leading-tight">
           Generate your <br className="hidden md:block" />
           custom home service website <br className="hidden md:block" />
@@ -63,9 +63,9 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading, onSi
       </div>
 
       {/* Main Form Card - Tightened for fold visibility */}
-      <div className="bg-[#0D1117]/80 backdrop-blur-sm border border-white/5 rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-10 shadow-2xl relative overflow-hidden text-left">
-        <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 md:gap-y-8">
+      <div className="bg-[#0D1117]/80 backdrop-blur-sm border border-white/5 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 shadow-2xl relative overflow-hidden text-left">
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 md:gap-y-6">
             {/* Service Industry */}
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
@@ -128,58 +128,42 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({ onSubmit, isLoading, onSi
           </div>
 
           {/* Additional Details */}
-          <div className="space-y-6 md:space-y-8">
-            {/* Services Offered - Full Width */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 md:gap-y-6">
+            {/* Services Offered */}
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
                 Services Offered <span className="text-gray-600 normal-case tracking-normal">(optional)</span>
               </label>
               <input
                 type="text"
-                placeholder="e.g. Drain cleaning, water heater repair, pipe installation..."
+                placeholder="e.g. Drain cleaning, water heater repair..."
                 value={inputs.services}
                 onChange={(e) => setInputs({ ...inputs, services: e.target.value })}
                 className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 md:gap-y-8">
-              {/* Tagline */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
-                  Tagline <span className="text-gray-600 normal-case tracking-normal">(optional)</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Quality You Can Trust"
-                  value={inputs.tagline}
-                  onChange={(e) => setInputs({ ...inputs, tagline: e.target.value })}
-                  className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
-                />
-              </div>
-
-              {/* Years in Business */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
-                  Years in Business <span className="text-gray-600 normal-case tracking-normal">(optional)</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 35"
-                  value={inputs.yearsInBusiness}
-                  onChange={(e) => setInputs({ ...inputs, yearsInBusiness: e.target.value })}
-                  className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
-                />
-              </div>
+            {/* Years in Business */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">
+                Years in Business <span className="text-gray-600 normal-case tracking-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 35"
+                value={inputs.yearsInBusiness}
+                onChange={(e) => setInputs({ ...inputs, yearsInBusiness: e.target.value })}
+                className="w-full bg-transparent border-b border-white/10 px-0 py-2 focus:outline-none focus:border-blue-500 transition-all text-white placeholder:text-gray-700 text-base md:text-lg"
+              />
             </div>
           </div>
 
           {/* Action Button - Large Rounded Pill */}
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center pt-2">
             <button
               type="submit"
               disabled={isLoading}
-              className="group bg-white text-black font-bold px-10 py-4 md:px-12 md:py-5 rounded-full hover:bg-gray-100 transition-all transform active:scale-[0.98] disabled:opacity-50 flex items-center gap-3 shadow-xl shadow-black/40 uppercase tracking-widest text-xs md:text-sm"
+              className="group bg-white text-black font-bold px-8 py-3 md:px-10 md:py-4 rounded-full hover:bg-gray-100 transition-all transform active:scale-[0.98] disabled:opacity-50 flex items-center gap-3 shadow-xl shadow-black/40 uppercase tracking-widest text-xs md:text-sm"
             >
               {isLoading ? 'Generating Site...' : (
                 <>

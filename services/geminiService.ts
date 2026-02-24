@@ -25,7 +25,7 @@ export const generateSiteContent = async (inputs: GeneratorInputs): Promise<Gene
       .replaceAll("{location}", inputs.location)
       .replaceAll("{phone}", inputs.phone)
       .replaceAll("{services}", inputs.services || "")
-      .replaceAll("{tagline}", inputs.tagline || "")
+
       .replaceAll("{yearsInBusiness}", inputs.yearsInBusiness || "");
 
     const imagePromptHero = `Wide establishing shot of a professional ${inputs.industry} team working at a residential job site in ${inputs.location}. Professional uniforms, cinematic lighting, 8k resolution. No text, no logos.`;
