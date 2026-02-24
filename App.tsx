@@ -564,7 +564,7 @@ const App: React.FC = () => {
             <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-gray-100 p-3 md:p-4 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
               <div className="max-w-3xl mx-auto space-y-2">
                 {/* HOW IT WORKS + steps */}
-                <div className="flex flex-wrap justify-center items-center gap-x-5 gap-y-0.5">
+                <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-y-0.5 md:gap-x-5">
                   <span className="text-black font-bold text-xs">1. Edit your text and images as needed.</span>
                   <span className="text-black font-bold text-xs">2. Click Deploy to publish your site.</span>
                   <span className="text-black font-bold text-xs">3. Your site goes live instantly.</span>

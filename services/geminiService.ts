@@ -19,14 +19,15 @@ export const generateSiteContent = async (inputs: GeneratorInputs): Promise<Gene
 
   try {
     // 1. Prepare Prompts
+    const normalizedYears = (inputs.yearsInBusiness || "").replace(/\s*years?\s*$/i, "").trim();
+
     const textPrompt = SYSTEM_PROMPT
       .replaceAll("{industry}", inputs.industry)
       .replaceAll("{companyName}", inputs.companyName)
       .replaceAll("{location}", inputs.location)
       .replaceAll("{phone}", inputs.phone)
       .replaceAll("{services}", inputs.services || "")
-
-      .replaceAll("{yearsInBusiness}", inputs.yearsInBusiness || "");
+      .replaceAll("{yearsInBusiness}", normalizedYears);
 
     const imagePromptHero = `Wide establishing shot of a professional ${inputs.industry} team working at a residential job site in ${inputs.location}. Professional uniforms, cinematic lighting, 8k resolution. No text, no logos.`;
     const imagePromptTrust = `Action shot of a ${inputs.industry} team actively working on a project. Shows professionalism and teamwork, tools visible, natural lighting, high quality. No text, no logos.`;
