@@ -25,13 +25,12 @@ export const generateSiteContent = async (inputs: GeneratorInputs): Promise<Gene
       .replace("{location}", inputs.location)
       .replace("{phone}", inputs.phone);
 
-    const imagePromptHero = `Wide establishing shot of a professional ${inputs.industry} team at a job site in ${inputs.location}. Professional uniforms, cinematic lighting, 8k resolution. No text.`;
-    const imagePromptValue = `Action shot of a ${inputs.industry} professional performing service. Close-up on tools and expert workmanship, natural lighting, high quality. No text.`;
-
-    const imagePromptWho = `Professional photo of a ${inputs.industry} customer at home, looking happy and satisfied with services provided by ${inputs.companyName} in ${inputs.location}. High quality, natural lighting. No text.`;
+    const imagePromptHero = `Wide establishing shot of a professional ${inputs.industry} team working at a residential job site in ${inputs.location}. Professional uniforms, cinematic lighting, 8k resolution. No text, no logos.`;
+    const imagePromptTrust = `Action shot of a ${inputs.industry} team actively working on a project. Shows professionalism and teamwork, tools visible, natural lighting, high quality. No text, no logos.`;
+    const imagePromptWhyChooseUs = `Professional portrait of a ${inputs.industry} team posing with their equipment and service vehicle. Confident, approachable, well-lit, high quality. No text, no logos.`;
 
     // 2. Generate Text and Images in Parallel
-    const [textResponse, heroImgRes, valueImgRes, whoImgRes] = await Promise.all([
+    const [textResponse, heroImgRes, trustImgRes, whyChooseUsImgRes] = await Promise.all([
       ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: textPrompt,
@@ -46,11 +45,11 @@ export const generateSiteContent = async (inputs: GeneratorInputs): Promise<Gene
       }),
       ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
-        contents: { parts: [{ text: imagePromptValue }] },
+        contents: { parts: [{ text: imagePromptTrust }] },
       }),
       ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
-        contents: { parts: [{ text: imagePromptWho }] },
+        contents: { parts: [{ text: imagePromptWhyChooseUs }] },
       })
     ]);
 
@@ -75,17 +74,17 @@ export const generateSiteContent = async (inputs: GeneratorInputs): Promise<Gene
     // 4. Combine and Sanitize
     if (!siteData.hero) siteData.hero = {} as any;
     if (!siteData.contact) siteData.contact = {} as any;
-    if (!siteData.valueProposition) siteData.valueProposition = {} as any;
-    if (!siteData.whoWeHelp) siteData.whoWeHelp = {} as any;
+    if (!siteData.trust) siteData.trust = {} as any;
+    if (!siteData.whyChooseUs) siteData.whyChooseUs = {} as any;
 
     const hero = siteData.hero!;
-    const vp = siteData.valueProposition!;
-    const wwh = siteData.whoWeHelp!;
+    const trust = siteData.trust!;
+    const wcu = siteData.whyChooseUs!;
     const contact = siteData.contact!;
 
     hero.heroImage = extractImage(heroImgRes);
-    vp.image = extractImage(valueImgRes);
-    wwh.image = extractImage(whoImgRes);
+    trust.image = extractImage(trustImgRes);
+    wcu.image = extractImage(whyChooseUsImgRes);
 
     contact.phone = inputs.phone;
     contact.location = inputs.location;

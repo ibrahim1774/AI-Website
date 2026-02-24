@@ -16,37 +16,58 @@ COMPLIANCE & NEUTRALITY RULES (STRICT - FAILURE IS UNACCEPTABLE):
 8. FOOTER: Do NOT generate a disclaimer, the application handles it.
 
 CTA REQUIREMENTS (STRICT):
-- Include exactly 3 CTAs throughout the site (Hero, Mid-page, Bottom).
+- Include exactly 5 CTAs across the site (Hero, Trust, Value Banner, Emergency, Final CTA).
 - EVERY CTA MUST include the literal phone number "{phone}" directly in the text (e.g., "Get an Estimate — Call {phone}").
 - DO NOT use placeholders like "[Phone]", brackets, or generic text. The number MUST be visible.
 - Examples: "Call Us — {phone}", "Request Service — {phone}".
 - Do NOT generate any CTA without the phone number.
 
 LOCATION PERSONALIZATION:
-- Include "{location}" in the titles of exactly 2-3 sections naturally (e.g., "Serving {location}", "Why {location} Residents Trust Us").
+- Include "{location}" in the titles of exactly 3-4 sections naturally.
 - Tone should be fluid and natural, not keyword-stuffed.
 
-HERO HEADLINE (STRICT):
-- MUST include both "{companyName}" and "{location}".
-- Style: Short, concise, maximum 2 lines. 
-- Tone: Professional and branding-focused, NOT keyword-heavy or stacked lists.
-- Do NOT use generic "stacked" text blocks.
+SECTIONS TO GENERATE (ALL MANDATORY):
 
-MANDATORY SECTIONS (DO NOT SKIP):
-- ALL sections listed below MUST be generated every single time.
-- Failure to include any section (especially "Who We Help") is unacceptable.
+1. HERO SECTION:
+   - headline: Single line. Formula: "Professional [Service] in {location}". MUST include "{location}".
+   - subheadline: Body paragraph. Formula: "{companyName} provides [adjectives], and affordable [service]. We specialize in [specific services]. Throughout {location}, we focus on quality, precision, and satisfaction at every job."
+   - ctaText: CTA button text. MUST include "{phone}".
 
-SECTIONS TO GENERATE:
-1. Hero: Headline (exactly 2 lines), subtext, badge, stats, and ctaText (MUST include {phone}).
-2. Services: Exactly 4 distinct service cards with icons. 
-3. Value Proposition: Section headline (personalize with {location}), subtitle, descriptive content, highlights, and ctaText (MUST include {phone}).
-4. Process: Exactly 3 logical steps from start to finish.
-5. Key Highlights: Headline (personalize with {location}) and exactly 6 checklist items.
-6. Who We Help: A heading (e.g., "Who This Is For") and exactly 3-5 concise bullet points based on the target audience.
-7. FAQs: Exactly 4 common questions.
-8. Conclusion/Footer: A final persuasive heading and ctaText (MUST include {phone}).
+2. TRUST/CREDIBILITY SECTION:
+   - headline: Formula: "Trusted [Service] Experts Serving {location}"
+   - paragraph: Supporting text establishing authority, reliability, and professionalism. Describe dedication to quality outcomes.
+   - bullets: Exactly 4-5 key service features or benefits as short phrases (e.g., "Professional-grade equipment", "Comprehensive safety protocols", "Responsive scheduling", "Transparent communication").
+   - ctaText: CTA button text. MUST include "{phone}".
 
-Icon Selection: Use Lucide-react icon names in dash-case (e.g., "wrench", "shield-check", "clock").
+3. SERVICES OVERVIEW:
+   - headline: Section heading (e.g., "Our Core Services" or "What We Do").
+   - cards: Exactly 4-6 service cards. Each card has: icon (Lucide dash-case name), title (service name), description (1-2 sentences about that service).
+
+4. VALUE PROPOSITION BANNER:
+   - headline: Formula: "Safe, Reliable [Service Type] for Your Property"
+   - subheadline: One supporting sentence reinforcing the value.
+   - ctaText: CTA button text. MUST include "{phone}".
+
+5. DETAILED SERVICES ("What We Offer"):
+   - headline: "What We Offer" or similar positioning statement.
+   - cards: Exactly 6 service cards. Each has: icon (Lucide dash-case name), title (service name), description (2-3 sentences with specific details about the process). These should be MORE detailed than the overview cards and cover different or expanded services.
+
+6. EMERGENCY/URGENCY SECTION:
+   - headline: Question format. Formula: "Have a [Emergency Situation]? We're Just a Call Away."
+   - paragraph: Location-specific reassurance mentioning "{location}". Time-sensitive, action-oriented language.
+   - ctaText: "Call Now" style CTA. MUST include "{phone}".
+
+7. WHY CHOOSE US:
+   - headline: e.g., "Why {location} Chooses {companyName}" or "The Trusted Choice for [Service] in {location}".
+   - paragraph: Company values and commitment statement.
+   - differentiators: Exactly 3-4 items. Each has a bold title (e.g., "Affordable & Honest Pricing", "Local & Reliable", "Dedicated Team", "Comprehensive Service") and a 1-2 sentence description.
+
+8. FINAL CTA:
+   - headline: Persuasive closing headline (e.g., "Complete [Service] Solutions").
+   - subheadline: Supporting sentence reinforcing comprehensive service with "{location}" reference.
+   - ctaText: CTA button text. MUST include "{phone}".
+
+Icon Selection: Use Lucide-react icon names in dash-case (e.g., "wrench", "shield-check", "clock", "flame", "droplets", "thermometer", "zap", "hard-hat", "phone-call", "home", "settings", "truck").
 
 Industry: {industry}
 Company: {companyName}
@@ -57,41 +78,34 @@ Phone: {phone}
 export const RESPONSE_SCHEMA = {
   type: Type.OBJECT,
   properties: {
-    bannerText: { type: Type.STRING },
     hero: {
       type: Type.OBJECT,
       properties: {
-        badge: { type: Type.STRING },
-        headline: {
-          type: Type.OBJECT,
-          properties: {
-            line1: { type: Type.STRING },
-            line2: { type: Type.STRING }
-          },
-          required: ["line1", "line2"]
-        },
-        subtext: { type: Type.STRING },
+        headline: { type: Type.STRING },
+        subheadline: { type: Type.STRING },
         ctaText: { type: Type.STRING },
-        navCta: { type: Type.STRING },
-        stats: { // Keep key name for compatibility but updated prompt restricts contents
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              label: { type: Type.STRING },
-              value: { type: Type.STRING } // Prompt says NO NUMBERS
-            },
-            required: ["label", "value"]
-          },
-          minItems: 3,
-          maxItems: 4
-        }
       },
-      required: ["badge", "headline", "subtext", "stats"]
+      required: ["headline", "subheadline", "ctaText"]
     },
-    services: {
+    trust: {
       type: Type.OBJECT,
       properties: {
+        headline: { type: Type.STRING },
+        paragraph: { type: Type.STRING },
+        bullets: {
+          type: Type.ARRAY,
+          items: { type: Type.STRING },
+          minItems: 4,
+          maxItems: 5
+        },
+        ctaText: { type: Type.STRING },
+      },
+      required: ["headline", "paragraph", "bullets", "ctaText"]
+    },
+    servicesOverview: {
+      type: Type.OBJECT,
+      properties: {
+        headline: { type: Type.STRING },
         cards: {
           type: Type.ARRAY,
           items: {
@@ -104,32 +118,25 @@ export const RESPONSE_SCHEMA = {
             required: ["title", "description", "icon"]
           },
           minItems: 4,
-          maxItems: 4
+          maxItems: 6
         }
       },
-      required: ["cards"]
+      required: ["headline", "cards"]
     },
-    valueProposition: {
+    valueBanner: {
       type: Type.OBJECT,
       properties: {
-        title: { type: Type.STRING },
-        subtitle: { type: Type.STRING },
-        content: { type: Type.STRING },
+        headline: { type: Type.STRING },
+        subheadline: { type: Type.STRING },
         ctaText: { type: Type.STRING },
-        highlights: {
-          type: Type.ARRAY,
-          items: { type: Type.STRING },
-          minItems: 3,
-          maxItems: 4
-        }
       },
-      required: ["title", "subtitle", "content", "ctaText", "highlights"]
+      required: ["headline", "subheadline", "ctaText"]
     },
-    process: {
+    detailedServices: {
       type: Type.OBJECT,
       properties: {
-        title: { type: Type.STRING },
-        steps: {
+        headline: { type: Type.STRING },
+        cards: {
           type: Type.ARRAY,
           items: {
             type: Type.OBJECT,
@@ -140,59 +147,50 @@ export const RESPONSE_SCHEMA = {
             },
             required: ["title", "description", "icon"]
           },
-          minItems: 3,
-          maxItems: 3
-        }
-      },
-      required: ["title", "steps"]
-    },
-    benefits: {
-      type: Type.OBJECT,
-      properties: {
-        title: { type: Type.STRING },
-        items: {
-          type: Type.ARRAY,
-          items: { type: Type.STRING },
           minItems: 6,
           maxItems: 6
         }
       },
-      required: ["title", "items"]
+      required: ["headline", "cards"]
     },
-    whoWeHelp: {
-      type: Type.OBJECT,
-      properties: {
-        title: { type: Type.STRING },
-        imagePrompt: { type: Type.STRING },
-        bullets: {
-          type: Type.ARRAY,
-          items: { type: Type.STRING },
-          minItems: 3,
-          maxItems: 5
-        }
-      },
-      required: ["title", "imagePrompt", "bullets"]
-    },
-    faqs: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.OBJECT,
-        properties: {
-          question: { type: Type.STRING },
-          answer: { type: Type.STRING }
-        },
-        required: ["question", "answer"]
-      },
-      minItems: 4,
-      maxItems: 4
-    },
-    footer: {
+    emergency: {
       type: Type.OBJECT,
       properties: {
         headline: { type: Type.STRING },
-        ctaText: { type: Type.STRING }
+        paragraph: { type: Type.STRING },
+        ctaText: { type: Type.STRING },
       },
-      required: ["headline", "ctaText"]
+      required: ["headline", "paragraph", "ctaText"]
+    },
+    whyChooseUs: {
+      type: Type.OBJECT,
+      properties: {
+        headline: { type: Type.STRING },
+        paragraph: { type: Type.STRING },
+        differentiators: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              title: { type: Type.STRING },
+              description: { type: Type.STRING }
+            },
+            required: ["title", "description"]
+          },
+          minItems: 3,
+          maxItems: 4
+        }
+      },
+      required: ["headline", "paragraph", "differentiators"]
+    },
+    finalCta: {
+      type: Type.OBJECT,
+      properties: {
+        headline: { type: Type.STRING },
+        subheadline: { type: Type.STRING },
+        ctaText: { type: Type.STRING },
+      },
+      required: ["headline", "subheadline", "ctaText"]
     },
     contact: {
       type: Type.OBJECT,
@@ -204,7 +202,10 @@ export const RESPONSE_SCHEMA = {
       required: ["phone", "location", "companyName"]
     }
   },
-  required: ["bannerText", "hero", "services", "valueProposition", "process", "benefits", "faqs", "footer", "contact"]
+  required: [
+    "hero", "trust", "servicesOverview", "valueBanner",
+    "detailedServices", "emergency", "whyChooseUs", "finalCta", "contact"
+  ]
 };
 
 export const STATUS_MESSAGES = [

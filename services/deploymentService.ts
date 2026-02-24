@@ -14,7 +14,7 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${data.hero.headline.line1} - ${data.contact.companyName}</title>
+    <title>${data.hero.headline} - ${data.contact.companyName}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @font-face {
@@ -22,7 +22,7 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
         src: local('Avenir-Light'), local('Avenir Light'), local('HelveticaNeue-Light'), local('Helvetica Neue Light'), sans-serif;
         font-weight: 300;
       }
-      
+
       body {
         font-family: "Avenir Light", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
         background-color: #05070A;
@@ -30,7 +30,7 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
         margin: 0;
         font-weight: 300;
       }
-      
+
       h1, h2, h3, h4, h5, h6, button, input, textarea, div, span, p, a {
         font-family: "Avenir Light", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
       }
@@ -38,17 +38,17 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
       .tracking-tighter {
         letter-spacing: -0.05em;
       }
-      
+
       .selection\:bg-blue-100 *::selection {
         background-color: #dbeafe;
         color: #1e40af;
       }
-      
+
       /* ContentEditable Clean Focus */
       [contenteditable="true"]:focus {
         outline: none;
       }
-      
+
       /* Custom Scrollbar */
       .custom-scrollbar::-webkit-scrollbar {
         width: 8px;
@@ -64,7 +64,7 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #cbd5e1;
       }
-      
+
       @media (max-width: 640px) {
         body {
           font-size: 14px;
@@ -103,22 +103,11 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
     if (deployData.hero?.heroImage?.startsWith('data:')) {
       deployData.hero.heroImage = await uploadAsset(deployData.hero.heroImage);
     }
-    if (deployData.valueProposition?.image?.startsWith('data:')) {
-      deployData.valueProposition.image = await uploadAsset(deployData.valueProposition.image);
+    if (deployData.trust?.image?.startsWith('data:')) {
+      deployData.trust.image = await uploadAsset(deployData.trust.image);
     }
-
-    if (deployData.whoWeHelp?.image?.startsWith('data:')) {
-      deployData.whoWeHelp.image = await uploadAsset(deployData.whoWeHelp.image);
-    }
-
-    // Upload gallery images sequentially
-    if (deployData.gallery?.images) {
-      for (let i = 0; i < deployData.gallery.images.length; i++) {
-        const img = deployData.gallery.images[i];
-        if (img && img.startsWith('data:')) {
-          deployData.gallery.images[i] = await uploadAsset(img);
-        }
-      }
+    if (deployData.whyChooseUs?.image?.startsWith('data:')) {
+      deployData.whyChooseUs.image = await uploadAsset(deployData.whyChooseUs.image);
     }
 
     // 3. Render with paths (now URLs)
@@ -128,7 +117,7 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${data.hero.headline.line1} - ${data.contact.companyName}</title>
+    <title>${data.hero.headline} - ${data.contact.companyName}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @font-face {
@@ -136,7 +125,7 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
         src: local('Avenir-Light'), local('Avenir Light'), local('HelveticaNeue-Light'), local('Helvetica Neue Light'), sans-serif;
         font-weight: 300;
       }
-      
+
       body {
         font-family: "Avenir Light", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
         background-color: #05070A;
@@ -144,7 +133,7 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
         margin: 0;
         font-weight: 300;
       }
-      
+
       h1, h2, h3, h4, h5, h6, button, input, textarea, div, span, p, a {
         font-family: "Avenir Light", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
       }
@@ -152,15 +141,13 @@ export const deploySite = async (data: GeneratedSiteData, projectName: string) =
       .tracking-tighter {
         letter-spacing: -0.05em;
       }
-      
+
       @media (max-width: 640px) {
         body {
           font-size: 14px;
         }
       }
     </style>
-
-
 </head>
 <body>
     ${cleanBodyHtml}

@@ -290,7 +290,7 @@ const App: React.FC = () => {
       const data = await generateSiteContent(newInputs);
       const instance: SiteInstance = {
         id: Math.random().toString(36).substring(7),
-        data: { ...data, gallery: { title: 'Our Work', subtitle: 'See our latest projects', images: [null, null, null] } },
+        data,
         lastSaved: Date.now(),
         formInputs: newInputs,
         deploymentStatus: 'draft',

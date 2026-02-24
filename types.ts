@@ -5,77 +5,65 @@ export interface ServiceCard {
   icon: string;
 }
 
-export interface BenefitCard {
+export interface DetailedServiceCard {
   title: string;
   description: string;
   icon: string;
 }
 
-export interface FAQItem {
-  question: string;
-  answer: string;
+export interface Differentiator {
+  title: string;
+  description: string;
 }
 
 export interface GeneratedSiteData {
-  bannerText: string;
   hero: {
-    badge: string;
-    headline: {
-      line1: string;
-      line2: string;
-    };
-    subtext: string;
+    headline: string;
+    subheadline: string;
     ctaText: string;
-    navCta: string;
     heroImage: string;
-    stats?: {
-      label: string;
-      value: string;
-    }[];
   };
-  services: {
+  trust: {
+    headline: string;
+    paragraph: string;
+    bullets: string[];
+    ctaText: string;
+    image: string;
+  };
+  servicesOverview: {
+    headline: string;
     cards: ServiceCard[];
   };
-  valueProposition: {
-    title: string;
-    subtitle: string;
-    content: string;
-    ctaText: string;
-    image: string;
-    highlights: string[];
-  };
-  benefits: {
-    title: string;
-    items: string[];
-  };
-  process: {
-    title: string;
-    steps: {
-      title: string;
-      description: string;
-      icon: string;
-    }[];
-  };
-  whoWeHelp: {
-    title: string;
-    image: string;
-    bullets: string[];
-  };
-  gallery?: {
-    title: string;
-    subtitle: string;
-    images: (string | null)[];
-  };
-  faqs: FAQItem[];
-  footer: {
+  valueBanner: {
     headline: string;
+    subheadline: string;
+    ctaText: string;
+  };
+  detailedServices: {
+    headline: string;
+    cards: DetailedServiceCard[];
+  };
+  emergency: {
+    headline: string;
+    paragraph: string;
+    ctaText: string;
+  };
+  whyChooseUs: {
+    headline: string;
+    paragraph: string;
+    differentiators: Differentiator[];
+    image: string;
+  };
+  finalCta: {
+    headline: string;
+    subheadline: string;
     ctaText: string;
   };
   contact: {
     phone: string;
     location: string;
     companyName: string;
-  }
+  };
 }
 
 export interface SiteInstance {
