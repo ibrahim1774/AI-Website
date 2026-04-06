@@ -73,6 +73,9 @@ const App: React.FC = () => {
   const [deploymentUrl, setDeploymentUrl] = useState<string>('');
   const [deploymentMessage, setDeploymentMessage] = useState<string>('');
 
+  // Pricing plan state
+  const [pricingPlan, setPricingPlan] = useState<'monthly' | 'yearly'>('yearly');
+
   // Modal state
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signup');
@@ -367,7 +370,8 @@ const App: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           companyName: activeSite.data.contact.companyName,
-          siteId: activeSite.id
+          siteId: activeSite.id,
+          plan: pricingPlan
         }),
       });
 
@@ -551,7 +555,7 @@ const App: React.FC = () => {
             </div>
           )}
 
-          <main className={`bg-white ${isPostPayment ? '' : 'pb-[340px] md:pb-52'}`}>
+          <main className={`bg-white ${isPostPayment ? '' : 'pb-[380px] md:pb-60'}`}>
             <SiteRenderer
               data={activeSite.data}
               isEditMode={true}
@@ -570,10 +574,50 @@ const App: React.FC = () => {
                   <span className="text-black font-bold text-xs">3. Your site goes live instantly.</span>
                 </div>
 
+                {/* Monthly/Yearly toggle */}
+                <div className="flex items-center justify-center gap-2">
+                  <div className="inline-flex items-center bg-gray-100 rounded-full p-0.5 border border-gray-200">
+                    <button
+                      onClick={() => setPricingPlan('monthly')}
+                      className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+                        pricingPlan === 'monthly'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Monthly
+                    </button>
+                    <button
+                      onClick={() => setPricingPlan('yearly')}
+                      className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+                        pricingPlan === 'yearly'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Yearly
+                    </button>
+                  </div>
+                  {pricingPlan === 'yearly' && (
+                    <span className="text-[10px] font-bold text-green-600 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      Save 59%
+                    </span>
+                  )}
+                </div>
+
                 {/* Pricing + deploy button */}
                 <div className="flex flex-col md:flex-row items-center justify-center gap-2">
                   <p className="text-black font-bold text-xs uppercase tracking-tight text-center">
-                    PAY ONLY $10/MONTH WEBSITE HOSTING TO HAVE YOUR CUSTOM SITE LIVE & ACTIVE
+                    {pricingPlan === 'yearly' ? (
+                      <>
+                        PAY ONLY{' '}
+                        <span className="line-through text-gray-400">$120/yr</span>{' '}
+                        <span className="text-blue-600">$49/yr</span>{' '}
+                        WEBSITE HOSTING TO HAVE YOUR CUSTOM SITE LIVE & ACTIVE
+                      </>
+                    ) : (
+                      <>PAY ONLY $10/MONTH WEBSITE HOSTING TO HAVE YOUR CUSTOM SITE LIVE & ACTIVE</>
+                    )}
                   </p>
                   <button
                     onClick={handleDeploy}

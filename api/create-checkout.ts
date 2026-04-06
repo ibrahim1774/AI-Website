@@ -8,9 +8,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { companyName, siteId } = req.body || {};
+    const { companyName, siteId, plan } = req.body || {};
+    const billingPlan = plan === 'yearly' ? 'yearly' : 'monthly';
+    const unitAmount = billingPlan === 'yearly' ? 4900 : 1000;
+    const interval = billingPlan === 'yearly' ? 'year' : 'month';
+    const priceLabel = billingPlan === 'yearly' ? '$49/yr' : '$10/mo';
 
-    console.log(`[Stripe Checkout] Creating session for: ${companyName || 'Unknown'} (Site: ${siteId || 'N/A'})`);
+    console.log(`[Stripe Checkout] Creating ${billingPlan} session for: ${companyName || 'Unknown'} (Site: ${siteId || 'N/A'})`);
 
     const safeCompanyName = (companyName && companyName.trim()) || "Your Business";
 
@@ -23,11 +27,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         currency: 'usd',
                         product_data: {
                             name: `Website Hosting: ${safeCompanyName}`,
-                            description: `Professional hosting and maintenance for your custom generated website.`,
+                            description: `Professional hosting and maintenance for your custom generated website. (${priceLabel})`,
                         },
-                        unit_amount: 1000, // $10.00
+                        unit_amount: unitAmount,
                         recurring: {
-                            interval: 'month',
+                            interval: interval,
                         },
                     },
                     quantity: 1,
@@ -39,13 +43,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             cancel_url: `${req.headers.origin}`,
             metadata: {
                 companyName: safeCompanyName,
-                siteId: siteId || 'unknown'
+                siteId: siteId || 'unknown',
+                plan: billingPlan
             },
             subscription_data: {
-                description: `Website Hosting for ${safeCompanyName}`,
+                description: `Website Hosting for ${safeCompanyName} (${priceLabel})`,
                 metadata: {
                     companyName: safeCompanyName,
-                    siteId: siteId || 'unknown'
+                    siteId: siteId || 'unknown',
+                    plan: billingPlan
                 }
             }
         });
