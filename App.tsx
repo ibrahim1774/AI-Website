@@ -81,6 +81,25 @@ const App: React.FC = () => {
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signup');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  // ─── Reset stale deploying state when returning from Stripe via browser back ───
+  useEffect(() => {
+    const resetStaleDeployment = () => {
+      if (deploymentStatus === 'deploying' && !window.location.search.includes('payment=success')) {
+        setDeploymentStatus('idle');
+      }
+    };
+
+    // Check on mount (covers full page reload)
+    resetStaleDeployment();
+
+    // Check on bfcache restore (covers browser back button)
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) resetStaleDeployment();
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, [deploymentStatus]);
+
   // ─── On authenticated load, navigate to dashboard and load site ───
   useEffect(() => {
     if (!authLoading && isAuthenticated && user && currentView === 'generator') {
