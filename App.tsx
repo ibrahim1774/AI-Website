@@ -600,7 +600,7 @@ const App: React.FC = () => {
                   </div>
                   {pricingPlan === 'yearly' && (
                     <span className="text-[10px] font-bold text-green-600 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                      Save 59%
+                      Save 40%
                     </span>
                   )}
                 </div>
@@ -612,7 +612,7 @@ const App: React.FC = () => {
                       <>
                         PAY ONLY{' '}
                         <span className="line-through text-gray-400">$120/yr</span>{' '}
-                        <span className="text-blue-600">$49/yr</span>{' '}
+                        <span className="text-blue-600">$72/yr</span>{' '}
                         WEBSITE HOSTING TO HAVE YOUR CUSTOM SITE LIVE & ACTIVE
                       </>
                     ) : (

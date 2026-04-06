@@ -10,9 +10,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { companyName, siteId, plan } = req.body || {};
     const billingPlan = plan === 'yearly' ? 'yearly' : 'monthly';
-    const unitAmount = billingPlan === 'yearly' ? 4900 : 1000;
+    const unitAmount = billingPlan === 'yearly' ? 7200 : 1000;
     const interval = billingPlan === 'yearly' ? 'year' : 'month';
-    const priceLabel = billingPlan === 'yearly' ? '$49/yr' : '$10/mo';
+    const priceLabel = billingPlan === 'yearly' ? '$72/yr' : '$10/mo';
 
     console.log(`[Stripe Checkout] Creating ${billingPlan} session for: ${companyName || 'Unknown'} (Site: ${siteId || 'N/A'})`);
 
